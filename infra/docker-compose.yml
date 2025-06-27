@@ -10,17 +10,19 @@ services:
     restart: always
 
   backend:
-    build: ../backend/
-    env_file: .env
-    ports:
-      - "8000:8000"
+    build:
+      context: ../backend/src          
+      dockerfile: ../Dockerfile
+    env_file: ../infra/.env
     volumes:
       - static:/backend_static
       - media:/app/media
       - ../data:/app/data  
+      - ../../infra/.env:/app/.env:ro
+    ports:
+      - "8000:8000"
     depends_on:
       - db
-    restart: always
     command: gunicorn --bind 0:8000 foodgram.wsgi
 
   frontend:
